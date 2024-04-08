@@ -23,6 +23,7 @@ import android.bluetooth.BluetoothGattCallback
 
 class MyBluetoothGattCallback(private val context: Context) : BluetoothGattCallback() {
 
+
     override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
         super.onConnectionStateChange(gatt, status, newState)
 
@@ -38,9 +39,12 @@ class MyBluetoothGattCallback(private val context: Context) : BluetoothGattCallb
                     //    ActivityCompat#requestPermissions
                     return
                 }
-                gatt?.discoverServices()
-
                 val device = gatt?.device
+                var expectedDeviceAddress = "00:00:00:00:00:00"
+                if (device?.address == expectedDeviceAddress) {
+                    gatt.discoverServices()
+                }
+
                 device?.let {
                     val intent = Intent(ACTION_DEVICE_CONNECTED)
                     intent.putExtra(EXTRA_DEVICE_NAME, device.name)
